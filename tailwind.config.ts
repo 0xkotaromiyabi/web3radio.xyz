@@ -34,6 +34,9 @@ export default {
           DEFAULT: "#32CD32", // Retro LED green
           dim: "#1F7A1F",
         },
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        border: "hsl(var(--border))",
       },
       keyframes: {
         "led-glow": {
