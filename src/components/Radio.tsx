@@ -67,6 +67,15 @@ const Radio = () => {
 
   return (
     <div className="max-w-md mx-auto p-6">
+      {/* Logo */}
+      <div className="mb-4 flex justify-center">
+        <img 
+          src="/web3radio-logo.png" 
+          alt="Web3 Radio" 
+          className="w-32 h-32 rounded-full shadow-lg"
+        />
+      </div>
+      
       {/* Winamp-style container */}
       <div className="bg-[#232323] rounded-lg shadow-xl border border-[#444] select-none">
         {/* Title bar */}
