@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useConnect, useAccount, useDisconnect } from 'wagmi';
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
+import { injected } from 'wagmi/connectors';
 import { Volume2, Volume1, VolumeX, Power } from 'lucide-react';
 
 const Radio = () => {
@@ -8,9 +8,7 @@ const Radio = () => {
   const [volume, setVolume] = useState(50);
   const [station, setStation] = useState(98.5);
   const [cryptoPrices, setCryptoPrices] = useState<string[]>([]);
-  const { connect } = useConnect({
-    connector: new MetaMaskConnector(),
-  });
+  const { connect } = useConnect();
   const { address } = useAccount();
   const { disconnect } = useDisconnect();
 
@@ -117,7 +115,7 @@ const Radio = () => {
             </div>
           ) : (
             <button
-              onClick={() => connect()}
+              onClick={() => connect({ connector: injected() })}
               className="px-4 py-2 bg-metal text-black rounded-lg hover:bg-metal-light transition-colors"
             >
               Connect Wallet

@@ -1,16 +1,12 @@
 import Radio from '@/components/Radio';
-import { WagmiConfig, createConfig, configureChains, mainnet } from 'wagmi';
-import { publicProvider } from 'wagmi/providers/public';
-
-const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet],
-  [publicProvider()]
-);
+import { WagmiConfig, createConfig, http } from 'wagmi';
+import { mainnet } from 'wagmi/chains';
 
 const config = createConfig({
-  autoConnect: true,
-  publicClient,
-  webSocketPublicClient,
+  chains: [mainnet],
+  transports: {
+    [mainnet.id]: http(),
+  },
 });
 
 const Index = () => {
