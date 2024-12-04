@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useConnect, useAccount, useDisconnect } from 'wagmi';
 import { injected } from 'wagmi/connectors';
-import { Volume2, Volume1, VolumeX, Power } from 'lucide-react';
+import { Volume2, Volume1, VolumeX, Power, SkipBack, SkipForward, Play, Pause } from 'lucide-react';
 
 const Radio = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -66,81 +66,92 @@ const Radio = () => {
   const VolumeIcon = volume === 0 ? VolumeX : volume < 50 ? Volume1 : Volume2;
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <div className="bg-wood rounded-xl shadow-2xl p-8 relative overflow-hidden border-8 border-wood-dark">
-        {/* Radio Body */}
-        <div className="bg-[#2a1810] rounded-lg p-6 space-y-6 shadow-inner">
-          {/* Speaker Grills */}
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div className="h-20 bg-black/80 rounded-lg grid grid-cols-6 gap-1 p-2">
-              {[...Array(24)].map((_, i) => (
-                <div key={i} className="bg-black rounded-full" />
-              ))}
-            </div>
-            <div className="h-20 bg-black/80 rounded-lg grid grid-cols-6 gap-1 p-2">
-              {[...Array(24)].map((_, i) => (
-                <div key={i} className="bg-black rounded-full" />
+    <div className="max-w-md mx-auto p-6">
+      {/* Winamp-style container */}
+      <div className="bg-[#232323] rounded-lg shadow-xl border border-[#444] select-none">
+        {/* Title bar */}
+        <div className="bg-gradient-to-r from-[#1a1a1a] to-[#333] p-1 flex justify-between items-center">
+          <div className="text-[#00ff00] text-xs font-bold">Web3 Radio</div>
+          <div className="flex gap-2">
+            <button className="text-gray-400 hover:text-white text-xs">_</button>
+            <button className="text-gray-400 hover:text-white text-xs">□</button>
+            <button className="text-gray-400 hover:text-white text-xs">×</button>
+          </div>
+        </div>
+
+        {/* Main display */}
+        <div className="bg-[#000] p-4">
+          <div className="h-8 bg-[#0a0a0a] border border-[#333] mb-2 overflow-hidden">
+            <div className="animate-marquee whitespace-nowrap">
+              {cryptoPrices.map((price, index) => (
+                <span key={index} className="text-[#00ff00] font-mono text-sm mx-4">
+                  {price}
+                </span>
               ))}
             </div>
           </div>
 
-          {/* Display Panel */}
-          <div className="bg-black rounded-lg p-4 relative overflow-hidden">
-            <div className="h-12 bg-black/80 rounded flex items-center overflow-hidden">
-              <div className="animate-marquee whitespace-nowrap">
-                {cryptoPrices.map((price, index) => (
-                  <span key={index} className="text-display mx-4 font-mono animate-led-glow">
-                    {price}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Controls */}
-          <div className="grid grid-cols-3 gap-6 mt-6">
-            {/* Power Button */}
-            <button
-              onClick={togglePlay}
-              className={`p-4 rounded-full ${
-                isPlaying ? 'bg-red-500 shadow-lg' : 'bg-gray-700'
-              } transition-all duration-300 flex items-center justify-center transform hover:scale-105`}
-            >
-              <Power className="w-6 h-6 text-white" />
-            </button>
-
-            {/* Volume Knob */}
-            <div className="flex flex-col items-center">
-              <VolumeIcon className="w-6 h-6 text-metal-dark mb-2" />
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={volume}
-                onChange={(e) => setVolume(parseInt(e.target.value))}
-                className="w-full appearance-none h-2 rounded-full bg-metal-dark"
-              />
-            </div>
-
-            {/* Tuning Decoration */}
-            <div className="flex items-center justify-center">
-              <div className="w-16 h-16 rounded-full bg-metal-dark shadow-inner flex items-center justify-center">
-                <div className="w-2 h-8 bg-metal absolute transform -translate-y-1/2 rotate-45" />
-              </div>
+          {/* Visualizer (simulated) */}
+          <div className="h-16 bg-[#000] border border-[#333] mb-2">
+            <div className="h-full flex items-end justify-around px-1">
+              {[...Array(20)].map((_, i) => (
+                <div
+                  key={i}
+                  className="w-1 bg-[#00ff00]"
+                  style={{
+                    height: `${Math.random() * 100}%`,
+                    transition: 'height 150ms ease'
+                  }}
+                />
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Wallet Connection */}
-        <div className="mt-6 text-center">
+        {/* Controls */}
+        <div className="bg-[#232323] p-4">
+          <div className="flex justify-between items-center mb-4">
+            <button className="text-gray-400 hover:text-white">
+              <SkipBack size={16} />
+            </button>
+            <button
+              onClick={togglePlay}
+              className="bg-[#333] hover:bg-[#444] rounded-full p-2 text-white"
+            >
+              {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+            </button>
+            <button className="text-gray-400 hover:text-white">
+              <SkipForward size={16} />
+            </button>
+          </div>
+
+          {/* Volume slider */}
+          <div className="flex items-center gap-2">
+            <VolumeIcon className="text-gray-400" size={16} />
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={volume}
+              onChange={(e) => setVolume(parseInt(e.target.value))}
+              className="w-full h-1 bg-[#444] appearance-none rounded cursor-pointer"
+              style={{
+                backgroundImage: `linear-gradient(to right, #00ff00 0%, #00ff00 ${volume}%, #444 ${volume}%, #444 100%)`
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Wallet connection */}
+        <div className="border-t border-[#444] p-4">
           {address ? (
             <div className="space-y-2">
-              <p className="text-sm text-metal-dark font-mono">
+              <p className="text-xs text-gray-400 font-mono">
                 Connected: {address.slice(0, 6)}...{address.slice(-4)}
               </p>
               <button
                 onClick={() => disconnect()}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                className="w-full px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition-colors"
               >
                 Disconnect Wallet
               </button>
@@ -148,7 +159,7 @@ const Radio = () => {
           ) : (
             <button
               onClick={() => connect({ connector: injected() })}
-              className="px-4 py-2 bg-metal text-black rounded-lg hover:bg-metal-light transition-colors"
+              className="w-full px-3 py-1 bg-[#444] text-white text-xs rounded hover:bg-[#555] transition-colors"
             >
               Connect Wallet
             </button>
