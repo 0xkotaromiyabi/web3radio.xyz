@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useConnect, useAccount, useDisconnect } from 'wagmi';
 import { injected } from 'wagmi/connectors';
 import { Volume2, Volume1, VolumeX, Power } from 'lucide-react';
@@ -6,11 +6,39 @@ import { Volume2, Volume1, VolumeX, Power } from 'lucide-react';
 const Radio = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(50);
-  const [station, setStation] = useState(98.5);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [cryptoPrices, setCryptoPrices] = useState<string[]>([]);
   const { connect } = useConnect();
   const { address } = useAccount();
   const { disconnect } = useDisconnect();
+
+  useEffect(() => {
+    const audio = new Audio('https://web3radio.cloud/stream');
+    audioRef.current = audio;
+    audio.volume = volume / 100;
+
+    return () => {
+      audio.pause();
+      audio.src = '';
+    };
+  }, []);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume / 100;
+    }
+  }, [volume]);
+
+  const togglePlay = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
 
   // Simulate crypto price updates
   useEffect(() => {
@@ -24,7 +52,6 @@ const Radio = () => {
     setCryptoPrices(mockPrices);
     
     const interval = setInterval(() => {
-      // In production, this would fetch from real API
       const newPrices = mockPrices.map(price => {
         const value = parseFloat(price.split('$')[1].replace(',', ''));
         const change = (Math.random() - 0.5) * 100;
@@ -40,9 +67,23 @@ const Radio = () => {
 
   return (
     <div className="max-w-2xl mx-auto p-6">
-      <div className="bg-wood rounded-lg shadow-2xl p-8 relative overflow-hidden">
+      <div className="bg-wood rounded-xl shadow-2xl p-8 relative overflow-hidden border-8 border-wood-dark">
         {/* Radio Body */}
-        <div className="bg-wood-dark rounded-t-lg p-6 space-y-6">
+        <div className="bg-[#2a1810] rounded-lg p-6 space-y-6 shadow-inner">
+          {/* Speaker Grills */}
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="h-20 bg-black/80 rounded-lg grid grid-cols-6 gap-1 p-2">
+              {[...Array(24)].map((_, i) => (
+                <div key={i} className="bg-black rounded-full" />
+              ))}
+            </div>
+            <div className="h-20 bg-black/80 rounded-lg grid grid-cols-6 gap-1 p-2">
+              {[...Array(24)].map((_, i) => (
+                <div key={i} className="bg-black rounded-full" />
+              ))}
+            </div>
+          </div>
+
           {/* Display Panel */}
           <div className="bg-black rounded-lg p-4 relative overflow-hidden">
             <div className="h-12 bg-black/80 rounded flex items-center overflow-hidden">
@@ -54,19 +95,16 @@ const Radio = () => {
                 ))}
               </div>
             </div>
-            <div className="mt-4 text-display font-mono text-2xl text-center animate-led-glow">
-              {station.toFixed(1)} MHz
-            </div>
           </div>
 
           {/* Controls */}
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-3 gap-6 mt-6">
             {/* Power Button */}
             <button
-              onClick={() => setIsPlaying(!isPlaying)}
+              onClick={togglePlay}
               className={`p-4 rounded-full ${
-                isPlaying ? 'bg-red-500' : 'bg-gray-700'
-              } transition-colors duration-300 flex items-center justify-center`}
+                isPlaying ? 'bg-red-500 shadow-lg' : 'bg-gray-700'
+              } transition-all duration-300 flex items-center justify-center transform hover:scale-105`}
             >
               <Power className="w-6 h-6 text-white" />
             </button>
@@ -84,17 +122,11 @@ const Radio = () => {
               />
             </div>
 
-            {/* Tuning Knob */}
-            <div className="flex flex-col items-center">
-              <input
-                type="range"
-                min="87.5"
-                max="108.0"
-                step="0.1"
-                value={station}
-                onChange={(e) => setStation(parseFloat(e.target.value))}
-                className="w-full appearance-none h-2 rounded-full bg-metal-dark"
-              />
+            {/* Tuning Decoration */}
+            <div className="flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full bg-metal-dark shadow-inner flex items-center justify-center">
+                <div className="w-2 h-8 bg-metal absolute transform -translate-y-1/2 rotate-45" />
+              </div>
             </div>
           </div>
         </div>
