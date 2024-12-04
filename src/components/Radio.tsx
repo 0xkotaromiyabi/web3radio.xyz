@@ -1,19 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useConnect, useAccount, useDisconnect } from 'wagmi';
 import { injected } from 'wagmi/connectors';
-import { Volume2, Volume1, VolumeX, Power, SkipBack, SkipForward, Play, Pause } from 'lucide-react';
+import { Volume2, Volume1, VolumeX, Power, SkipBack, SkipForward, Play, Pause, Radio as RadioIcon } from 'lucide-react';
 
 const Radio = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(50);
+  const [currentStation, setCurrentStation] = useState('web3');
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [cryptoPrices, setCryptoPrices] = useState<string[]>([]);
   const { connect } = useConnect();
   const { address } = useAccount();
   const { disconnect } = useDisconnect();
 
+  const stations = {
+    web3: 'https://web3radio.cloud/stream',
+    indonesia: 'https://s3.vinhostmedia.com:10995/stream'  // Example Indonesian radio stream
+  };
+
   useEffect(() => {
-    const audio = new Audio('https://web3radio.cloud/stream');
+    const audio = new Audio(stations[currentStation]);
     audioRef.current = audio;
     audio.volume = volume / 100;
 
@@ -21,7 +27,7 @@ const Radio = () => {
       audio.pause();
       audio.src = '';
     };
-  }, []);
+  }, [currentStation]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -38,6 +44,14 @@ const Radio = () => {
       }
       setIsPlaying(!isPlaying);
     }
+  };
+
+  const changeStation = (station: 'web3' | 'indonesia') => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    setCurrentStation(station);
+    setIsPlaying(false);
   };
 
   // Simulate crypto price updates
@@ -67,8 +81,8 @@ const Radio = () => {
 
   return (
     <div className="max-w-md mx-auto p-6">
-      {/* Logo */}
-      <div className="mb-4 flex justify-center">
+      {/* Logo - positioned at the very top */}
+      <div className="mb-8 flex justify-center">
         <img 
           src="/web3radio-logo.png" 
           alt="Web3 Radio" 
@@ -76,11 +90,39 @@ const Radio = () => {
         />
       </div>
       
+      {/* Station Selection */}
+      <div className="mb-4 flex gap-2 justify-center">
+        <button
+          onClick={() => changeStation('web3')}
+          className={`px-4 py-2 rounded-full flex items-center gap-2 ${
+            currentStation === 'web3' 
+              ? 'bg-[#00ff00] text-black' 
+              : 'bg-[#333] text-gray-300'
+          }`}
+        >
+          <RadioIcon size={16} />
+          Web3 Radio
+        </button>
+        <button
+          onClick={() => changeStation('indonesia')}
+          className={`px-4 py-2 rounded-full flex items-center gap-2 ${
+            currentStation === 'indonesia' 
+              ? 'bg-[#00ff00] text-black' 
+              : 'bg-[#333] text-gray-300'
+          }`}
+        >
+          <RadioIcon size={16} />
+          Radio Indonesia
+        </button>
+      </div>
+
       {/* Winamp-style container */}
       <div className="bg-[#232323] rounded-lg shadow-xl border border-[#444] select-none">
         {/* Title bar */}
         <div className="bg-gradient-to-r from-[#1a1a1a] to-[#333] p-1 flex justify-between items-center">
-          <div className="text-[#00ff00] text-xs font-bold">Web3 Radio</div>
+          <div className="text-[#00ff00] text-xs font-bold">
+            {currentStation === 'web3' ? 'Web3 Radio' : 'Radio Indonesia'}
+          </div>
           <div className="flex gap-2">
             <button className="text-gray-400 hover:text-white text-xs">_</button>
             <button className="text-gray-400 hover:text-white text-xs">□</button>
@@ -100,7 +142,7 @@ const Radio = () => {
             </div>
           </div>
 
-          {/* Visualizer (simulated) */}
+          {/* Visualizer */}
           <div className="h-16 bg-[#000] border border-[#333] mb-2">
             <div className="h-full flex items-end justify-around px-1">
               {[...Array(20)].map((_, i) => (
