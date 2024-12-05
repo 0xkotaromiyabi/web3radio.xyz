@@ -15,7 +15,7 @@ const Radio = () => {
 
   const stations = {
     web3: 'https://web3radio.cloud/stream',
-    indonesia: 'https://s3.vinhostmedia.com:10995/stream'  // Example Indonesian radio stream
+    indonesia: 'https://s1.cloudmu.id/listen/female_radio/radio.mp3'  // Example Indonesian radio stream
   };
 
   useEffect(() => {
@@ -64,19 +64,19 @@ const Radio = () => {
       "DOT $30",
     ];
     setCryptoPrices(mockPrices);
-    
+  
     const interval = setInterval(() => {
       const newPrices = mockPrices.map(price => {
-        const value = parseFloat(price.split('$')[1].replace(',', ''));
-        const change = (Math.random() - 0.5) * 100;
-        return `${price.split(' ')[0]} $${(value + change).toFixed(2)}`;
+        const [symbol, priceString] = price.split(' ');
+        const value = parseFloat(priceString.replace(/[$,]/g, '')); // Menghapus simbol $ dan koma
+        const change = (Math.random() - 0.5) * 100; // Fluktuasi acak
+        return `${symbol} $${(value + change).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       });
       setCryptoPrices(newPrices);
     }, 5000);
-
-    return () => clearInterval(interval);
+  
+    return () => clearInterval(interval); // Bersihkan interval
   }, []);
-
   const VolumeIcon = volume === 0 ? VolumeX : volume < 50 ? Volume1 : Volume2;
 
   return (
