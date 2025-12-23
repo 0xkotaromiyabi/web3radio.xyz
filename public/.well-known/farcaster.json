@@ -8,10 +8,10 @@
   "frame": {
     "version": "1",
     "name": "Web3Radio",
-    "iconUrl": "https://www.web3radio.xyz/web3radio-logo.png",
-    "splashImageUrl": "https://www.web3radio.xyz/web3radio-logo.png",
+    "iconUrl": "https://web3radio-xyz.vercel.app/web3radio-logo.png",
+    "splashImageUrl": "https://web3radio-xyz.vercel.app/web3radio-logo.png",
     "splashBackgroundColor": "#000000",
-    "homeUrl": "https://web3radio.xyz",
+    "homeUrl": "https://web3radio-xyz.vercel.app/",
     "subtitle": "Decentralized Radio Station",
     "description": "Live stations, curated news, and upcoming events for the on-chain world.",
     "primaryCategory": "music",
@@ -27,7 +27,7 @@
     "ogImageUrl": "https://i.imgur.com/emXbMkd.png"
   },
   "miniApp": {
-    "manifestUrl": "https://web3radio.xyz/.well-known/farcaster.json",
-    "url": "https://web3radio.xyz"
+    "manifestUrl": "https://web3radio-xyz.vercel.app/.well-known/farcaster.json",
+    "url": "https://web3radio-xyz.vercel.app/"
   }
 }
