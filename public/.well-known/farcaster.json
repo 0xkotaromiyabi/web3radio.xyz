@@ -1,10 +1,10 @@
-
 {
   "accountAssociation": {
     "header": "eyJmaWQiOjM1NjM4MiwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweGM2MzBjYTMzMDBlYzA3QTU3MmQ3MjU2QUQ0RENkODMxN2M1NTc2ODgifQ",
-    "payload": "eyJkb21haW4iOiJ3ZWIzcmFkaW8ueHl6In0",
-    "signature": "MHhlMjA2YzllYWRlZGY0ZDcxMmI5ZmNlNDc4ZTIzOWIyZGU3YjA1M2FiZGU1MDM1NjU2OTBkZGEzMWYxZWE3MGQ4N2JkYTdhYWExZTJkNjdhMGE2NTAxYTk1MDFjMmEwN2RlODliYmMyNTA1Y2M3NjNkZjZiOGZmYmZlYzMwNWM4YjFi"
-  },
+    "payload": "eyJkb21haW4iOiJ3ZWIzcmFkaW8teHl6LnZlcmNlbC5hcHAifQ",
+    "signature": "4fyfGdmIsjZmPCg2JYSMnfIzEb3ee1zNnWDXdit1rGVIu/U2iJMIMMSSLmmKYwt3HY+w2B0VlzCWH81PY/5TXhw="
+  }
+},
   "frame": {
     "version": "1",
     "name": "Web3Radio",
